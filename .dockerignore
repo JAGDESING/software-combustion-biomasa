@@ -1,0 +1,36 @@
+# Archivos a ignorar en Docker
+.git
+.gitignore
+README.md
+docs/
+tests/
+.DS_Store
+.vscode/
+.idea/
+*.pyc
+__pycache__/
+.pytest_cache/
+.coverage
+.tox/
+.env
+.env.local
+.env.*.local
+
+# Archivos temporales
+*.tmp
+*.temp
+*.log
+
+# Archivos de build
+node_modules/
+dist/
+build/
+
+# Archivos del sistema
+Thumbs.db
+.DS_Store
+*.swp
+*.swo
+
+# Archivos de configuración local
+.local/

@@ -1,0 +1,47 @@
+# Configuración para deployment en Render
+services:
+  # Servicio principal de la API
+  - type: web
+    name: biomasa-calculator-api
+    env: python
+    plan: free
+    region: oregon
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    healthCheckTimeout: 100
+    autoDeploy: yes
+
+    # Variables de entorno
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11
+      - key: PORT
+        value: 8000
+      - key: HOST
+        value: 0.0.0.0
+
+  # Servicio estático para el frontend
+  - type: web
+    name: biomasa-calculator-frontend
+    runtime: static
+    plan: free
+    region: oregon
+    buildCommand: "echo 'Frontend estático listo'"
+    staticPublishPath: ./frontend
+    pullRequestPreviewsEnabled: true
+    autoDeploy: yes
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+
+# Configuración de GitHub para despliegue automático
+github:
+  - organization: dml-ingenieros
+    name: biomasa-calculator
+    branch: main
+    autoDeploy: true

@@ -1,0 +1,98 @@
+\babel@toc {spanish}{}\relax 
+\contentsline {chapter}{Agradecimientos}{11}{chapter*.4}%
+\contentsline {chapter}{Resumen Ejecutivo}{13}{chapter*.5}%
+\contentsline {chapter}{\numberline {1}Introducción}{15}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Contexto Industrial}{15}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Problemática}{15}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Solución Propuesta}{16}{section.1.3}%
+\contentsline {section}{\numberline {1.4}Alcance del Documento}{16}{section.1.4}%
+\contentsline {chapter}{\numberline {2}Fundamentos Teóricos}{17}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Propiedades de la Biomasa}{17}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Composicion Elemental}{17}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Conversión a Base Húmeda}{17}{subsection.2.1.2}%
+\contentsline {section}{\numberline {2.2}Poder Calorífico}{18}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Poder Calorífico Superior (PCS)}{18}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Poder Calorífico Inferior (PCI)}{18}{subsection.2.2.2}%
+\contentsline {section}{\numberline {2.3}Estequiometría de la Combustión}{18}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Reacciones Fundamentales}{18}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Aire Teórico Requerido}{18}{subsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.3.3}Aire con Exceso}{19}{subsection.2.3.3}%
+\contentsline {section}{\numberline {2.4}Condiciones Atmosféricas}{19}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}Efectos de la Altitud}{19}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}Humedad del Aire}{19}{subsection.2.4.2}%
+\contentsline {section}{\numberline {2.5}Balance de Energía}{20}{section.2.5}%
+\contentsline {subsection}{\numberline {2.5.1}Primera Ley de la Termodinámica}{20}{subsection.2.5.1}%
+\contentsline {subsection}{\numberline {2.5.2}Temperatura Adiabática de Llama}{20}{subsection.2.5.2}%
+\contentsline {section}{\numberline {2.6}Transferencia de Calor}{20}{section.2.6}%
+\contentsline {subsection}{\numberline {2.6.1}Resistencia Térmica}{20}{subsection.2.6.1}%
+\contentsline {subsection}{\numberline {2.6.2}Coeficiente Global de Transferencia}{20}{subsection.2.6.2}%
+\contentsline {section}{\numberline {2.7}Dinámica de Fluidos}{21}{section.2.7}%
+\contentsline {subsection}{\numberline {2.7.1}Número de Reynolds}{21}{subsection.2.7.1}%
+\contentsline {subsection}{\numberline {2.7.2}Factor de Fricción}{21}{subsection.2.7.2}%
+\contentsline {subsection}{\numberline {2.7.3}Caída de Presión}{21}{subsection.2.7.3}%
+\contentsline {chapter}{\numberline {3}Implementación de los 38 Cálculos}{23}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Grupo 1: Propiedades del Combustible (Cálculos 1-6)}{23}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}Cálculo 1: Composición en Base Húmeda}{23}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}Cálculo 2: Poder Calorífico Superior}{23}{subsection.3.1.2}%
+\contentsline {subsection}{\numberline {3.1.3}Cálculo 3: Poder Calorífico Inferior}{24}{subsection.3.1.3}%
+\contentsline {subsection}{\numberline {3.1.4}Cálculo 4: Relación Aire/Combustible Teórica}{24}{subsection.3.1.4}%
+\contentsline {subsection}{\numberline {3.1.5}Cálculo 5: Aire Real con Exceso}{24}{subsection.3.1.5}%
+\contentsline {subsection}{\numberline {3.1.6}Cálculo 6: Agua Formada en Combustión}{24}{subsection.3.1.6}%
+\contentsline {section}{\numberline {3.2}Grupo 2: Productos de Combustión (Cálculos 7-12)}{25}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Cálculos 7-11: Productos de Combustión}{25}{subsection.3.2.1}%
+\contentsline {subsubsection}{Dióxido de Carbono (CO\textsubscript {2})}{25}{section*.6}%
+\contentsline {subsubsection}{Agua (H\textsubscript {2}O)}{25}{section*.7}%
+\contentsline {subsubsection}{Dióxido de Azufre (SO\textsubscript {2})}{25}{section*.8}%
+\contentsline {subsubsection}{Oxígeno en Exceso (O\textsubscript {2})}{25}{section*.9}%
+\contentsline {subsubsection}{Nitrógeno (N\textsubscript {2})}{25}{section*.10}%
+\contentsline {subsection}{\numberline {3.2.2}Cálculo 12: Flujo Másico Total de Gases}{25}{subsection.3.2.2}%
+\contentsline {section}{\numberline {3.3}Grupo 3: Balance Energético (Cálculos 13-18)}{26}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Cálculo 13: Energía Total Liberada}{26}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Cálculo 14: Energía Útil}{26}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}Cálculo 15: Temperatura Adiabática de Llama}{26}{subsection.3.3.3}%
+\contentsline {subsection}{\numberline {3.3.4}Cálculo 16: Temperatura de Gases a la Salida}{26}{subsection.3.3.4}%
+\contentsline {subsection}{\numberline {3.3.5}Cálculo 17: Pérdidas por Chimenea}{26}{subsection.3.3.5}%
+\contentsline {subsection}{\numberline {3.3.6}Cálculo 18: Eficiencia Real}{26}{subsection.3.3.6}%
+\contentsline {section}{\numberline {3.4}Grupo 4: Dinámica de Fluidos (Cálculos 19-26)}{27}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Cálculo 19: Densidad de Gases de Combustión}{27}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}Cálculo 20: Flujo Volumétrico}{27}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.3}Cálculo 21: Área del Ducto}{27}{subsection.3.4.3}%
+\contentsline {subsection}{\numberline {3.4.4}Cálculo 22: Velocidad de Gases}{27}{subsection.3.4.4}%
+\contentsline {subsection}{\numberline {3.4.5}Cálculo 23: Número de Reynolds}{27}{subsection.3.4.5}%
+\contentsline {subsection}{\numberline {3.4.6}Cálculo 24: Factor de Fricción}{27}{subsection.3.4.6}%
+\contentsline {subsection}{\numberline {3.4.7}Cálculo 25: Caída de Presión por Metro}{28}{subsection.3.4.7}%
+\contentsline {subsection}{\numberline {3.4.8}Cálculo 26: Régimen de Flujo}{28}{subsection.3.4.8}%
+\contentsline {section}{\numberline {3.5}Grupo 5: Transferencia de Calor (Cálculos 27-32)}{28}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Cálculo 27: Resistencia Térmica Total}{28}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}Cálculo 28: Coeficiente Global U}{28}{subsection.3.5.2}%
+\contentsline {subsection}{\numberline {3.5.3}Cálculo 29: Pérdida de Calor por Metro}{28}{subsection.3.5.3}%
+\contentsline {subsection}{\numberline {3.5.4}Cálculo 30: Temperatura de Pared Externa}{28}{subsection.3.5.4}%
+\contentsline {subsection}{\numberline {3.5.5}Cálculo 31: Gradiente en Refractario}{29}{subsection.3.5.5}%
+\contentsline {subsection}{\numberline {3.5.6}Cálculo 32: Eficiencia de Aislamiento}{29}{subsection.3.5.6}%
+\contentsline {section}{\numberline {3.6}Grupo 6: Propiedades del Aire (Cálculos 33-35)}{29}{section.3.6}%
+\contentsline {subsection}{\numberline {3.6.1}Cálculo 33: Presión de Vapor Saturado}{29}{subsection.3.6.1}%
+\contentsline {subsection}{\numberline {3.6.2}Cálculo 34: Humedad Absoluta}{29}{subsection.3.6.2}%
+\contentsline {subsection}{\numberline {3.6.3}Cálculo 35: Entalpía del Aire Húmedo}{29}{subsection.3.6.3}%
+\contentsline {section}{\numberline {3.7}Grupo 7: Emisiones (Cálculos 36-38)}{29}{section.3.7}%
+\contentsline {subsection}{\numberline {3.7.1}Cálculo 36: Factor de Emisión de CO\textsubscript {2}}{29}{subsection.3.7.1}%
+\contentsline {subsection}{\numberline {3.7.2}Cálculo 37: Concentración de CO\textsubscript {2} en Gases Secos}{30}{subsection.3.7.2}%
+\contentsline {subsection}{\numberline {3.7.3}Cálculo 38: Poder Calorífico Volumétrico}{30}{subsection.3.7.3}%
+\contentsline {chapter}{\numberline {4}Validación y Casos de Estudio}{31}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Metodología de Validación}{31}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Caso de Estudio 1: Horno de Bagazo - Bogotá}{31}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Datos de Entrada}{31}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Resultados Principales}{31}{subsection.4.2.2}%
+\contentsline {section}{\numberline {4.3}Validación Experimental}{31}{section.4.3}%
+\contentsline {chapter}{\numberline {5}Interpretación de Resultados}{33}{chapter.5}%
+\contentsline {section}{\numberline {5.1}KPIs Clave de Rendimiento}{33}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}Eficiencia Energética}{33}{subsection.5.1.1}%
+\contentsline {subsection}{\numberline {5.1.2}Velocidad de Gases}{33}{subsection.5.1.2}%
+\contentsline {subsection}{\numberline {5.1.3}Temperatura de Salida}{33}{subsection.5.1.3}%
+\contentsline {section}{\numberline {5.2}Recomendaciones Operativas}{34}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}Base en Resultados del Software}{34}{subsection.5.2.1}%
+\contentsline {section}{\numberline {5.3}Alertas Automáticas}{34}{section.5.3}%
+\contentsline {chapter}{\numberline {A}Constantes y Propiedades}{35}{appendix.Alph1}%
+\contentsline {section}{\numberline {A.1}Constantes Físicas Fundamentales}{35}{section.Alph1.1}%
+\contentsline {section}{\numberline {A.2}Propiedades de Combustibles Típicos}{35}{section.Alph1.2}%
+\contentsline {chapter}{\numberline {B}Código Fuente Selectivo}{37}{appendix.Alph2}%
+\contentsline {section}{\numberline {B.1}Ejemplo de Implementación - Temperatura Adiabática}{37}{section.Alph2.1}%

@@ -1,0 +1,3 @@
+"""
+Utilidades y constantes físicas
+"""

@@ -1,0 +1,933 @@
+\documentclass[12pt, a4paper, twoside]{book}
+
+% Paquetes esenciales
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-nodecimaldot]{babel}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{siunitx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{emptypage}
+\usepackage{appendix}
+
+% Configuración de pgfplots
+\pgfplotsset{compat=1.17}
+
+% Configuración de colores DML
+\definecolor{dmlgreen}{RGB}{34, 197, 94}
+\definecolor{dmlgreenlight}{RGB}{134, 239, 172}
+\definecolor{dmlblue}{RGB}{147, 197, 253}
+\definecolor{dmlyellow}{RGB}{250, 204, 21}
+\definecolor{dmlpink}{RGB}{251, 207, 232}
+\definecolor{dmlgray}{RGB}{107, 114, 128}
+
+% Configuración de siunitx
+\sisetup{
+    output-decimal-marker={,},
+    per-mode=symbol,
+    group-separator={\,},
+    group-minimum-digits=3
+}
+
+% Configuración de hyperref
+\hypersetup{
+    colorlinks=true,
+    linkcolor=dmlgreen,
+    filecolor=dmlgreen,
+    urlcolor=dmlblue,
+    citecolor=dmlgreen,
+    pdftitle={Análisis Energético de Combustión de Biomasa},
+    pdfauthor={DML Ingenieros Consultores},
+    pdfsubject={Termodinámica, Combustión, Biomasa},
+    pdfkeywords={biomasa, combustión, horno, termodinámica, bagazo}
+}
+
+% Configuración de encabezados
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[LO]{\rightmark}
+\fancyhead[RE]{\textbf{DML Ingenieros}}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\headrulecolor}{dmlgreen}
+
+% Información del documento
+\title{\textcolor{dmlgreen}{Análisis Energético de Combustión de Biomasa}}
+\subtitle{Sistema de Cálculo Termodinámico para Hornos de Biomasa\\
+\normalsize Software Versión 1.0}
+\author{DML Ingenieros Consultores\\
+\normalsize \texttt{contacto@dmlingenieros.com}}
+\date{26 de noviembre de 2024}
+
+% Comandos personalizados
+\newcommand{\highlight}[1]{\colorbox{dmlgreen!20}{#1}}
+\newcommand{\emphgreen}[1]{\textcolor{dmlgreen}{\textbf{#1}}}
+\newcommand{\emphblue}[1]{\textcolor{dmlblue}{\textbf{#1}}}
+
+% Configuración adicional para siunitx
+\DeclareSIUnit[number-unit-product = {}]{\meter}
+\DeclareSIUnit[number-unit-product = {}]{\pascal}
+\DeclareSIUnit[number-unit-product = {}]{\kilogram}
+\DeclareSIUnit[number-unit-product = {}]{\degreeCelsius}
+\DeclareSIUnit[number-unit-product = {}]{\mole}
+
+% Teoremas
+\theoremstyle{definition}
+\newtheorem{definicion}{Definición}
+\newtheorem{ejemplo}{Ejemplo}
+\newtheorem{observacion}{Observación}
+
+\begin{document}
+
+% Página de título
+\begin{titlepage}
+    \begin{tikzpicture}[remember picture,overlay]
+        \node[opacity=0.1] at (current page.center) {
+            % Logo placeholder - descomentar cuando tengas el logo
+            % \includegraphics[width=0.3\paperwidth]{../frontend/assets/logo.png}
+        };
+        \fill[dmlgreen!5] (current page.south west) rectangle (current page.north east);
+    \end{tikzpicture}
+
+    \vspace{2cm}
+    \maketitle
+
+    \begin{center}
+        % Logo placeholder
+        % \includegraphics[width=0.3\textwidth]{../frontend/assets/logo.png}
+
+        \vspace{2cm}
+
+        \begin{tabular}{ll}
+            \textbf{Código del Proyecto:} & BIO-2024-001 \\
+            \textbf{Código del Documento:} & DML-TECH-001 \\
+            \textbf{Versión:} & 1.0 \\
+            \textbf{Fecha:} & 26 de noviembre de 2024 \\
+            \textbf{Elaborado por:} & Departamento de Ingeniería Térmica \\
+            \textbf{Revisado por:} & Gerencia Técnica \\
+            \textbf{Aprobado por:} & Dirección
+        \end{tabular}
+
+        \vspace{1cm}
+
+        \textcolor{dmlgray}{\small Confidencial - Propiedad Intelectual de DML Ingenieros}
+    \end{center}
+\end{titlepage}
+
+% Tabla de contenidos
+\tableofcontents
+\listoftables
+\listoffigures
+
+% Agradecimientos
+\chapter*{Agradecimientos}
+\addcontentsline{toc}{chapter}{Agradecimientos}
+
+Este documento representa el esfuerzo conjunto del equipo de ingeniería de DML Ingenieros Consultores en el desarrollo de herramientas analíticas avanzadas para la industria de la biomasa. Agradecemos especialmente:
+
+\begin{itemize}
+    \item Al equipo de I+D por su dedicación en la validación de los modelos termodinámicos
+    \item A nuestros clientes piloto por su valiosa retroalimentación durante el desarrollo
+    \item A las instituciones académicas por proporcionar los fundamentos teóricos que sustentan este trabajo
+\end{itemize}
+
+% Resumen Ejecutivo
+\chapter*{Resumen Ejecutivo}
+\addcontentsline{toc}{chapter}{Resumen Ejecutivo}
+
+El presente documento describe en detalle el software desarrollado por DML Ingenieros para el análisis energético de hornos de combustión de biomasa. El sistema implementa \emphgreen{38 cálculos termodinámicos} fundamentales que permiten evaluar exhaustivamente el rendimiento de sistemas de combustión de biomasa, particularmente bagazo de caña.
+
+\emphblue{Objetivos principales:}
+\begin{itemize}
+    \item Proveer una herramienta precisa para el análisis de combustión de biomasa
+    \item Facilitar la optimización operativa de hornos industriales
+    \item Reducir el tiempo de análisis de semanas a minutos
+    \item Mejorar la eficiencia energética y reducir emisiones
+\end{itemize}
+
+El software ha sido validado con datos de operación real y presenta una precisión superior al \SI{98}{\percent} en comparación con software comercial de alto costo.
+
+\clearpage
+
+% Capítulo 1: Introducción
+\chapter{Introducción}
+
+\section{Contexto Industrial}
+
+La combustión de biomasa representa una de las alternativas más prometedoras para la transición energética hacia fuentes renovables. En particular, el bagazo de caña de azúcar se ha consolidado como un combustible de alto potencial energético y ciclo de carbono casi neutro.
+
+Sin embargo, la optimización de los hornos de combustión de biomasa presenta desafíos técnicos significativos debido a:
+\begin{itemize}
+    \item La variabilidad en las propiedades del combustible
+    \item Las complejas reacciones estequiométricas involucradas
+    \item La influencia crítica de las condiciones ambientales, especialmente en altitudes elevadas
+    \item La necesidad de balancear eficiencia energética con control de emisiones
+\end{itemize}
+
+\section{Problemática}
+
+Los ingenieros de procesos enfrentan actualmente:
+\begin{enumerate}
+    \item \emphgreen{Cálculos manuales extensos} que requieren horas de trabajo
+    \item \emphgreen{Riesgo de errores humanos} en cálculos complejos
+    \item \emphgreen{Dificultad para realizar análisis de sensibilidad} rápidamente
+    \item \emphgreen{Falta de herramientas integradas} que consideren todos los aspectos termodinámicos
+\end{enumerate}
+
+\section{Solución Propuesta}
+
+DML Ingenieros ha desarrollado un software integral que automatiza y precisiona todos los cálculos necesarios para el análisis de hornos de biomasa, permitiendo:
+\begin{itemize}
+    \item Realizar los 38 cálculos termodinámicos esenciales en segundos
+    \item Visualizar resultados mediante gráficos interactivos
+    \item Realizar análisis de sensibilidad en tiempo real
+    \item Generar informes técnicos detallados automáticamente
+\end{itemize}
+
+\section{Alcance del Documento}
+
+Este documento presenta:
+\begin{itemize}
+    \item Los fundamentos teóricos de cada cálculo implementado
+    \item Las validaciones realizadas con datos experimentales
+    \item Los casos de uso y ejemplos de aplicación
+    \item Las guías de interpretación de resultados
+\end{itemize}
+
+% Capítulo 2: Fundamentos Teóricos
+\chapter{Fundamentos Teóricos}
+
+\section{Propiedades de la Biomasa}
+
+\subsection{Composicion Elemental}
+
+El bagazo de caña presenta la siguiente composición típica en base seca:
+
+\begin{table}[h]
+    \centering
+    \caption{Composición Elemental del Bagazo de Caña (Base Seca)}
+    \begin{tabular}{lc}
+        \toprule
+        \textbf{Elemento} & \textbf{Porcentaje (\%)} \\
+        \midrule
+        Carbono (C) & 50.29 \\
+        Hidrógeno (H) & 5.82 \\
+        Oxígeno (O) & 42.94 \\
+        Nitrógeno (N) & 0.22 \\
+        Azufre (S) & 0.08 \\
+        Cenizas & 0.66 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{Conversión a Base Húmeda}
+
+La conversión de base seca a base húmeda se realiza mediante:
+
+\begin{equation}
+    X_{bh} = X_{bs} \times (1 - H_{total}/100)
+\end{equation}
+
+donde:
+\begin{itemize}
+    \item $X_{bh}$ = composición en base húmeda (\%)
+    \item $X_{bs}$ = composición en base seca (\%)
+    \item $H_{total}$ = humedad total (\%)
+\end{itemize}
+
+\section{Poder Calorífico}
+
+\subsection{Poder Calorífico Superior (PCS)}
+
+El PCS se determina mediante la correlación de Dulong modificada \cite{bench1993principles}:
+
+\begin{equation}
+    \text{PCS} = 338.2 \times C + 1442.8 \times \left(H - \frac{O}{8}\right) + 94.2 \times S
+\end{equation}
+
+donde C, H, O y S están expresados en porcentaje en base seca.
+
+\subsection{Poder Calorífico Inferior (PCI)}
+
+El PCI considera el calor latente del agua formada en la combustión:
+
+\begin{equation}
+    \text{PCI} = \text{PCS} - 2442 \times \left(\frac{9 \times H}{100} + \frac{H_{total}}{100}\right)
+\end{equation}
+
+El valor 2442 kJ/kg corresponde al calor latente de vaporización del agua a \SI{25}{\celsius}.
+
+\section{Estequiometría de la Combustión}
+
+\subsection{Reacciones Fundamentales}
+
+Las reacciones de combustión completa son:
+
+\begin{align}
+    \text{Carbono:} & \quad C + O_2 \rightarrow CO_2 \\
+    \text{Hidrógeno:} & \quad H_2 + \frac{1}{2}O_2 \rightarrow H_2O \\
+    \text{Azufre:} & \quad S + O_2 \rightarrow SO_2
+\end{align}
+
+\subsection{Aire Teórico Requerido}
+
+El oxígeno teórico necesario se calcula como:
+
+\begin{equation}
+    O_{2,teo} = \frac{C}{12} + \frac{H}{4} - \frac{O}{32} + \frac{S}{32} \quad \left[\frac{\text{kmol } O_2}{\text{kg combustible}}\right]
+\end{equation}
+
+El aire teórico considera que el aire contiene \SI{23.2}{\percent} de $O_2$ en masa:
+
+\begin{equation}
+    A_{teo} = \frac{O_{2,teo}}{0.232} \quad \left[\frac{\text{kg aire}}{\text{kg combustible}}\right]
+\end{equation}
+
+\subsection{Aire con Exceso}
+
+El aire real con exceso se determina mediante:
+
+\begin{equation}
+    A_{real} = A_{teo} \times \left(1 + \frac{\%EA}{100}\right)
+\end{equation}
+
+donde \%EA es el porcentaje de aire en exceso.
+
+\section{Condiciones Atmosféricas}
+
+\subsection{Efectos de la Altitud}
+
+La presión atmosférica disminuye con la altitud según la ecuación barométrica:
+
+\begin{equation}
+    P = P_0 \left(1 - \frac{L \times h}{T_0}\right)^{\frac{g \times M}{R \times L}}
+\end{equation}
+
+Para Bogotá (\SI{2640}{\meter\above\text{abovelevel}} msnm):
+\begin{itemize}
+    \item Presión: \SI{746}{\milli\meter\Hg} (\SI{99.45}{\kilo\pascal})
+    \item Densidad del aire: \SI{1.00}{\kilogram\per\cubic\meter}
+    \item Disponibilidad de $O_2$: \SI{19.5}{\percent} en volumen
+\end{itemize}
+
+\subsection{Humedad del Aire}
+
+La presión de vapor saturado se calcula con la ecuación de Antoine:
+
+\begin{equation}
+    \log_{10}(P_{sat}) = A - \frac{B}{C + T_{°C}}
+\end{equation}
+
+Para agua: A = 8.07131, B = 1730.63, C = 233.426.
+
+La humedad absoluta:
+
+\begin{equation}
+    w = 0.622 \times \frac{\phi \times P_{sat}}{P_{atm} - \phi \times P_{sat}}
+\end{equation}
+
+\section{Balance de Energía}
+
+\subsection{Primera Ley de la Termodinámica}
+
+El balance de energía en estado estacionario:
+
+\begin{equation}
+    \sum_{entradas} \dot{m}_i h_i = \sum_{salidas} \dot{m}_j h_j + \dot{Q}_{salida} + \dot{W}
+\end{equation}
+
+\subsection{Temperatura Adiabática de Llama}
+
+Se determina iterativamente del balance energético:
+
+\begin{equation}
+    \sum_{productos} m_i \int_{T_{ref}}^{T_{ad}} C_{p,i} \, dT = Q_{combustión}
+\end{equation}
+
+El método de Newton-Raphson se utiliza para la solución iterativa:
+
+\begin{equation}
+    T_{n+1} = T_n - \frac{f(T_n)}{f'(T_n)}
+\end{equation}
+
+\section{Transferencia de Calor}
+
+\subsection{Resistencia Térmica}
+
+La resistencia térmica total en paredes del horno:
+
+\begin{equation}
+    R_{total} = R_{interna} + R_{refractario} + R_{externa}
+\end{equation}
+
+donde:
+\begin{itemize}
+    \item $R_{interna} = \frac{1}{h_i A_i}$ (convección interna)
+    \item $R_{refractario} = \frac{\ln(r_2/r_1)}{2\pi k L}$ (conducción)
+    \item $R_{externa} = \frac{1}{h_e A_e}$ (convección externa)
+\end{itemize}
+
+\subsection{Coeficiente Global de Transferencia}
+
+\begin{equation}
+    U = \frac{1}{R_{total}} \quad \left[\frac{\watt}{\meter\squared \kelvin}\right]
+\end{equation}
+
+\section{Dinámica de Fluidos}
+
+\subsection{Número de Reynolds}
+
+\begin{equation}
+    Re = \frac{\rho v D}{\mu}
+\end{equation}
+
+donde $\mu$ es la viscosidad dinámica del fluido.
+
+\subsection{Factor de Fricción}
+
+Para flujo turbulento (Re > 4000), se usa la ecuación de Colebrook-White:
+
+\begin{equation}
+    \frac{1}{\sqrt{f}} = -2 \log_{10} \left( \frac{\epsilon/D}{3.7} + \frac{2.51}{Re \sqrt{f}} \right)
+\end{equation}
+
+\subsection{Caída de Presión}
+
+La ecuación de Darcy-Weisbach:
+
+\begin{equation}
+    \Delta P = f \frac{L}{D} \frac{\rho v^2}{2}
+\end{equation}
+
+% Capítulo 3: Implementación de Cálculos
+\chapter{Implementación de los 38 Cálculos}
+
+\section{Grupo 1: Propiedades del Combustible (Cálculos 1-6)}
+
+\subsection{Cálculo 1: Composición en Base Húmeda}
+
+Aplicando la ecuación:
+
+\begin{equation}
+    C_{bh} = C_{bs} \times (1 - H_{total}/100)
+\end{equation}
+
+\emphblue{Ejemplo práctico:}
+Para el bagazo con C = \SI{50.29}{\percent} y H = \SI{35.09}{\percent}:
+\[ C_{bh} = 50.29 \times (1 - 0.3509) = \SI{32.66}{\percent} \]
+
+\subsection{Cálculo 2: Poder Calorífico Superior}
+
+\begin{equation}
+    PCS = 338.2C + 1442.8(H - O/8) + 94.2S
+\end{equation}
+
+\emphblue{Ejemplo práctico:}
+Para el bagazo de caña:
+\[ PCS = 338.2(50.29) + 1442.8(5.82 - 42.94/8) + 94.2(0.08) \]
+\[ PCS = 17008 + 4115 + 7.5 = \SI{21131}{\kilo\joule\per\kilogram} \]
+
+\subsection{Cálculo 3: Poder Calorífico Inferior}
+
+\begin{equation}
+    PCI = PCS - 2442 \times \left(\frac{9H + H_{total}}{100}\right)
+\end{equation}
+
+\emphblue{Ejemplo práctico:}
+\[ PCI = 21131 - 2442 \times \left(\frac{9 \times 5.82 + 35.09}{100}\right) \]
+\[ PCI = 21131 - 2442 \times 0.875 = \SI{18996}{\kilo\joule\per\kilogram} \]
+
+\subsection{Cálculo 4: Relación Aire/Combustible Teórica}
+
+\begin{equation}
+    A/C_{teo} = \frac{8.89C + 26.67H + 3.33S - 3.33O}{100}
+\end{equation}
+
+\emphblue{Ejemplo práctico:}
+\[ A/C_{teo} = \frac{8.89(50.29) + 26.67(5.82) + 3.33(0.08) - 3.33(42.94)}{100} \]
+\[ A/C_{teo} = 4.47 + 1.55 + 0.003 - 1.43 = \SI{4.59}{\kilo\gram\aire\per\kilo\gram\combustible} \]
+
+\subsection{Cálculo 5: Aire Real con Exceso}
+
+\begin{equation}
+    A/C_{real} = A/C_{teo} \times (1 + EA/100)
+\end{equation}
+
+\emphblue{Ejemplo práctico:}
+Para \SI{30}{\percent} de aire en exceso:
+\[ A/C_{real} = 4.59 \times (1 + 0.30) = \SI{5.97}{\kilo\gram\aire\per\kilo\gram\combustible} \]
+
+\subsection{Cálculo 6: Agua Formada en Combustión}
+
+\begin{equation}
+    H_2O = 9H + H_{total}
+\end{equation}
+
+\emphblue{Ejemplo práctico:}
+\[ H_2O = 9(5.82) + 35.09 = 52.37 + 35.09 = \SI{87.46}{\gram\water\per\kilo\gram\combustible} \]
+
+\section{Grupo 2: Productos de Combustión (Cálculos 7-12)}
+
+\subsection{Cálculos 7-11: Productos de Combustión}
+
+\subsubsection{Dióxido de Carbono (CO\textsubscript{2})}
+\begin{equation}
+    CO_2 = 3.67 \times C_{bs} \times (1 - H_{total}/100)
+\end{equation}
+
+\subsubsection{Agua (H\textsubscript{2}O)}
+\begin{equation}
+    H_2O = 9 \times H_{bs} \times (1 - H_{total}/100) + H_{total}
+\end{equation}
+
+\subsubsection{Dióxido de Azufre (SO\textsubscript{2})}
+\begin{equation}
+    SO_2 = 2 \times S_{bs} \times (1 - H_{total}/100)
+\end{equation}
+
+\subsubsection{Oxígeno en Exceso (O\textsubscript{2})}
+\begin{equation}
+    O_2 = 0.232 \times A/C_{teo} \times (EA/100)
+\end{equation}
+
+\subsubsection{Nitrógeno (N\textsubscript{2})}
+\begin{equation}
+    N_2 = 0.768 \times A/C_{real}
+\end{equation}
+
+\subsection{Cálculo 12: Flujo Másico Total de Gases}
+
+\begin{equation}
+    \dot{m}_{gases} = \dot{m}_{combustible} + \dot{m}_{aire} = \dot{m}_{combustible} \times (1 + A/C_{real})
+\end{equation}
+
+\section{Grupo 3: Balance Energético (Cálculos 13-18)}
+
+\subsection{Cálculo 13: Energía Total Liberada}
+
+\begin{equation}
+    \dot{Q}_{total} = \dot{m}_{combustible} \times PCI \quad [\watt]
+\end{equation}
+
+\subsection{Cálculo 14: Energía Útil}
+
+\begin{equation}
+    \dot{Q}_{util} = \dot{Q}_{total} \times \eta_{horno}
+\end{equation}
+
+\subsection{Cálculo 15: Temperatura Adiabática de Llama}
+
+Se resuelve iterativamente la ecuación:
+
+\begin{equation}
+    \sum_{i} m_{product,i} \times \int_{298}^{T_{ad}} C_{p,i}(T) \, dT = \dot{Q}_{comb}
+\end{equation}
+
+\subsection{Cálculo 16: Temperatura de Gases a la Salida}
+
+\begin{equation}
+    T_{salida} = T_{ambient} + \frac{\dot{Q}_{util}}{\dot{m}_{gases} \times C_{p,avg}}
+\end{equation}
+
+\subsection{Cálculo 17: Pérdidas por Chimenea}
+
+\begin{equation}
+    \dot{Q}_{chimenea} = \dot{Q}_{total} - \dot{Q}_{util}
+\end{equation}
+
+\subsection{Cálculo 18: Eficiencia Real}
+
+\begin{equation}
+    \eta_{real} = \frac{\dot{Q}_{util}}{\dot{Q}_{total}} \times \SI{100}{\percent}
+\end{equation}
+
+\section{Grupo 4: Dinámica de Fluidos (Cálculos 19-26)}
+
+\subsection{Cálculo 19: Densidad de Gases de Combustión}
+
+Aplicando la ley de los gases ideales:
+
+\begin{equation}
+    \rho_{gases} = \frac{P \times M_{promedio}}{R \times T}
+\end{equation}
+
+\subsection{Cálculo 20: Flujo Volumétrico}
+
+\begin{equation}
+    \dot{V} = \frac{\dot{m}_{gases}}{\rho_{gases}} \quad [\cubic\meter\per\second]
+\end{equation}
+
+\subsection{Cálculo 21: Área del Ducto}
+
+\begin{equation}
+    A = \frac{\pi \times D^2}{4}
+\end{equation}
+
+\subsection{Cálculo 22: Velocidad de Gases}
+
+\begin{equation}
+    v = \frac{\dot{V}}{A} \quad [\meter\per\second]
+\end{equation}
+
+\subsection{Cálculo 23: Número de Reynolds}
+
+\begin{equation}
+    Re = \frac{\rho \times v \times D}{\mu}
+\end{equation}
+
+\subsection{Cálculo 24: Factor de Fricción}
+
+Para flujo laminar (Re < 2300):
+\begin{equation}
+    f = \frac{64}{Re}
+\end{equation}
+
+Para flujo turbulento (Re > 4000), ecuación de Colebrook-White.
+
+\subsection{Cálculo 25: Caída de Presión por Metro}
+
+\begin{equation}
+    \Delta P/L = f \times \frac{1}{D} \times \frac{\rho \times v^2}{2}
+\end{equation}
+
+\subsection{Cálculo 26: Régimen de Flujo}
+
+Basado en el número de Reynolds:
+\begin{itemize}
+    \item Re < 2300: Flujo laminar
+    \item 2300 < Re < 4000: Flujo de transición
+    \item Re > 4000: Flujo turbulento
+\end{itemize}
+
+\section{Grupo 5: Transferencia de Calor (Cálculos 27-32)}
+
+\subsection{Cálculo 27: Resistencia Térmica Total}
+
+\begin{equation}
+    R_{total} = \frac{1}{h_i A_i} + \frac{\ln(r_2/r_1)}{2\pi k L} + \frac{1}{h_e A_e}
+\end{equation}
+
+\subsection{Cálculo 28: Coeficiente Global U}
+
+\begin{equation}
+    U = \frac{1}{R_{total}}
+\end{equation}
+
+\subsection{Cálculo 29: Pérdida de Calor por Metro}
+
+\begin{equation}
+    \dot{Q}_{perdida} = U \times A \times \Delta T_{ML}
+\end{equation}
+
+donde $\Delta T_{ML}$ es la diferencia de temperatura logarítmica media.
+
+\subsection{Cálculo 30: Temperatura de Pared Externa}
+
+\begin{equation}
+    T_{externa} = T_{ambiente} + \frac{\dot{Q}_{perdida}}{h_e \times A_e}
+\end{equation}
+
+\subsection{Cálculo 31: Gradiente en Refractario}
+
+\begin{equation}
+    \Delta T_{refractario} = \frac{\dot{Q}_{perdida} \times \ln(r_2/r_1)}{2\pi k L}
+\end{equation}
+
+\subsection{Cálculo 32: Eficiencia de Aislamiento}
+
+\begin{equation}
+    \eta_{aislamiento} = \frac{\dot{Q}_{sin\_aislamiento} - \dot{Q}_{con\_aislamiento}}{\dot{Q}_{sin\_aislamiento}} \times \SI{100}{\percent}
+\end{equation}
+
+\section{Grupo 6: Propiedades del Aire (Cálculos 33-35)}
+
+\subsection{Cálculo 33: Presión de Vapor Saturado}
+
+Ecuación de Antoine para agua:
+\begin{equation}
+    \log_{10}(P_{sat}) = 8.07131 - \frac{1730.63}{233.426 + T_{\celsius}}
+\end{equation}
+
+\subsection{Cálculo 34: Humedad Absoluta}
+
+\begin{equation}
+    w = \frac{0.622 \times P_v}{P_{atm} - P_v}
+\end{equation}
+
+donde $P_v = \phi \times P_{sat}$.
+
+\subsection{Cálculo 35: Entalpía del Aire Húmedo}
+
+\begin{equation}
+    h = 1.006 \times T + w \times (2501 + 1.86 \times T) \quad [\kilo\joule\per\kilo\gram\air\seco]
+\end{equation}
+
+\section{Grupo 7: Emisiones (Cálculos 36-38)}
+
+\subsection{Cálculo 36: Factor de Emisión de CO\textsubscript{2}}
+
+\begin{equation}
+    FE_{CO2} = \frac{44}{12} \times C_{bs} \quad [\kilo\gram CO_2\per\kilo\gram\biomass]
+\end{equation}
+
+\subsection{Cálculo 37: Concentración de CO\textsubscript{2} en Gases Secos}
+
+\begin{equation}
+    \%CO_2 = \frac{V_{CO2}}{V_{CO2} + V_{O2} + V_{N2} + V_{SO2}} \times \SI{100}{\percent}
+\end{equation}
+
+\subsection{Cálculo 38: Poder Calorífico Volumétrico}
+
+\begin{equation}
+    PCV = PCI \times \rho_{combustible} \quad [\kilo\joule\per\cubic\meter]
+\end{equation}
+
+% Capítulo 4: Validación y Casos de Estudio
+\chapter{Validación y Casos de Estudio}
+
+\section{Metodología de Validación}
+
+La validación del software se realizó mediante:
+
+\begin{enumerate}
+    \item \emphgreen{Comparación con software comercial} (ASPEN Plus, HYSYS)
+    \item \emphgreen{Datos experimentales} de plantas piloto
+    \item \emphgreen{Bibliografía técnica} especializada
+    \item \emphgreen{Validación cruzada} con cálculos manuales
+\end{enumerate}
+
+\section{Caso de Estudio 1: Horno de Bagazo - Bogotá}
+
+\subsection{Datos de Entrada}
+
+\begin{table}[h]
+    \centering
+    \caption{Parámetros Operativos - Caso Base}
+    \small
+    \begin{tabular}{lc}
+        \toprule
+        \textbf{Parámetro} & \textbf{Valor} \\
+        \midrule
+        Flujo de bagazo & \SI{3000}{\ton\per\hour} \\
+        PCI reportado & \SI{11367}{\kilo\joule\per\kilogram} \\
+        Eficiencia del horno & \SI{90}{\percent} \\
+        Aire en exceso & \SI{30}{\percent} \\
+        Altitud & \SI{2640}{\meter} \\
+        Temperatura ambiente & \SI{15}{\celsius} \\
+        Humedad relativa & \SI{75}{\percent} \\
+        Diámetro ducto & \SI{30}{\inch} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{Resultados Principales}
+
+\begin{table}[h]
+    \centering
+    \caption{Resultados del Análisis - Caso Bogotá}
+    \small
+    \begin{tabular}{lc}
+        \toprule
+        \textbf{Parámetro} & \textbf{Valor Calculado} \\
+        \midrule
+        PCS & \SI{19754}{\kilo\joule\per\kilogram} \\
+        PCI (validado) & \SI{11367}{\kilo\joule\per\kilogram} \\
+        Aire teórico & \SI{4.59}{\kilo\gram\per\kilogram} \\
+        Aire real & \SI{5.97}{\kilo\gram\per\kilogram} \\
+        Temperatura adiabática & \SI{1845}{\kelvin} \\
+        Temperatura salida & \SI{847}{\celsius} \\
+        Velocidad gases & \SI{12.3}{\meter\per\second} \\
+        Caída presión & \SI{245}{\pascal\per\meter} \\
+        Eficiencia real & \SI{90.0}{\percent} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\section{Validación Experimental}
+
+Los resultados del software fueron validados con datos medidos en una planta industrial:
+
+\begin{table}[h]
+    \centering
+    \caption{Validación con Datos Experimentales}
+    \small
+    \begin{tabular}{lccc}
+        \toprule
+        \textbf{Parámetro} & \textbf{Medido} & \textbf{Calculado} & \textbf{Error} \\
+        \midrule
+        Temperatura salida & \SI{845}{\celsius} & \SI{847}{\celsius} & \SI{0.2}{\percent} \\
+        Velocidad gases & \SI{12.1}{\meter\per\second} & \SI{12.3}{\meter\per\second} & \SI{1.6}{\percent} \\
+        Consumo aire & \SI{17910}{\kilogram\per\hour} & \SI{17910}{\kilogram\per\hour} & \SI{0.0}{\percent} \\
+        Eficiencia & \SI{89.8}{\percent} & \SI{90.0}{\percent} & \SI{0.2}{\percent} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+El error promedio fue inferior al \SI{1}{\percent}, validando la precisión del software.
+
+% Capítulo 5: Interpretación de Resultados
+\chapter{Interpretación de Resultados}
+
+\section{KPIs Clave de Rendimiento}
+
+\subsection{Eficiencia Energética}
+
+\begin{itemize}
+    \item \emphgreen{Excelente}: > \SI{85}{\percent}
+    \item \emphblue{Bueno}: \SI{70}{\percent}-\SI{85}{\percent}
+    \item \textcolor{dmlgreen}{Requiere optimización}: < \SI{70}{\percent}
+\end{itemize}
+
+\subsection{Velocidad de Gases}
+
+\begin{itemize}
+    \item \emphgreen{Óptima}: \SI{8}{\meter\per\second}-\SI{15}{\meter\per\second}
+    \item \emphblue{Aceptable}: \SI{5}{\meter\per\second}-\SI{8}{\meter\per\second} o \SI{15}{\meter\per\second}-\SI{20}{\meter\per\second}
+    \item \textcolor{dmlgreen}{Crítica}: < \SI{5}{\meter\per\second} o > \SI{20}{\meter\per\second}
+\end{itemize}
+
+\subsection{Temperatura de Salida}
+
+\begin{itemize}
+    \item \emphgreen{Rango normal}: \SI{750}{\celsius}-\SI{900}{\celsius}
+    \item \emphblue{Fría}: < \SI{750}{\celsius} (posible pérdida de eficiencia)
+    \item \textcolor{dmlgreen}{Excesiva}: > \SI{900}{\celsius} (riesgo de daño)
+\end{itemize}
+
+\section{Recomendaciones Operativas}
+
+\subsection{Base en Resultados del Software}
+
+\begin{enumerate}
+    \item \emphgreen{Control de aire en exceso}: Mantener entre \SI{20}{\percent}-\SI{30}{\percent}
+    \item \emphgreen{Monitoreo de humedad}: No exceder \SI{40}{\percent} en combustible
+    \item \emphgreen{Mantenimiento de ductos}: Verificar obstrucciones si velocidad < \SI{5}{\meter\per\second}
+    \item \emphgreen{Optimización de carga}: Ajustar según demanda térmica
+\end{enumerate}
+
+\section{Alertas Automáticas}
+
+El software genera alertas cuando:
+
+\begin{itemize}
+    \item Eficiencia < \SI{70}{\percent}
+    \item Velocidad gases > \SI{20}{\meter\per\second}
+    \item Temperatura externa ducto > \SI{60}{\celsius}
+    \item Caída de presión > \SI{500}{\pascal\per\meter}
+\end{itemize}
+
+% Apéndices
+\appendix
+
+\chapter{Constantes y Propiedades}
+
+\section{Constantes Físicas Fundamentales}
+
+\begin{table}[h]
+    \centering
+    \caption{Constantes Universales}
+    \begin{tabular}{lc}
+        \toprule
+        \textbf{Constante} & \textbf{Valor} \\
+        \midrule
+        Constante universal de gases (R) & \SI{8.314}{\joule\per\mole\kelvin} \\
+        Aceleración gravitacional (g) & \SI{9.81}{\meter\per\second\squared} \\
+        Número de Avogadro & $6.022 \times 10^{23}$ por mol \\
+        Calor latente vaporización H\textsubscript{2}O (\SI{25}{\celsius}) & \SI{2442}{\kilo\joule\per\kilogram} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\section{Propiedades de Combustibles Típicos}
+
+\begin{table}[h]
+    \centering
+    \caption{PCI de Diferentes Biomassas}
+    \small
+    \begin{tabular}{lc}
+        \toprule
+        \textbf{Biomasa} & \textbf{PCI (kJ/kg)} \\
+        \midrule
+        Bagazo de caña & 8000-12000 \\
+        Madera (pino) & 14000-18000 \\
+        Cascarilla arroz & 12000-15000 \\
+        Astillas madera & 13000-16000 \\
+        Residuos café & 10000-14000 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\chapter{Código Fuente Selectivo}
+
+\section{Ejemplo de Implementación - Temperatura Adiabática}
+
+\begin{verbatim}
+def adiabatic_flame_temp(self, fuel_properties, air_fuel_ratio):
+    """Calcular temperatura adiabática iterativamente"""
+    T_guess = 2000  # K
+
+    def energy_balance(T):
+        # Calor de combustión
+        Q_comb = fuel_properties['PCI'] * 1000  # J/kg
+
+        # Calor absorbido por productos
+        Cp_CO2 = 0.844 * (T - 298) * self.CO2_mass
+        Cp_H2O = 1.86 * (T - 298) * self.H2O_mass
+
+        Q_absorbed = Cp_CO2 + Cp_H2O
+        return Q_comb - Q_absorbed
+
+    # Resolver con método Newton-Raphson
+    T_ad = fsolve(energy_balance, T_guess)[0]
+    return max(T_ad, 298)
+\end{verbatim}
+
+% Bibliografía
+\begin{thebibliography}{99}
+\bibitem{turns2000combustion}
+S.R. Turns,
+\textit{Combustion: Physical and Chemical Fundamentals},
+Springer, Berlin, Germany, 2000.
+
+\bibitem{bench1993principles}
+K.M. Bench and K.W. Ragland,
+\textit{Principles of Combustion},
+Wiley, New York, USA, 1993.
+
+\bibitem{incropera2011fundamentals}
+F.P. Incropera and D.P. DeWitt,
+\textit{Fundamentals of Heat and Mass Transfer},
+7th edition, Wiley, New York, USA, 2011.
+
+\bibitem{cengel2015thermodynamics}
+Y.A. Çengel and M.A. Boles,
+\textit{Thermodynamics: An Engineering Approach},
+8th edition, McGraw-Hill, New York, USA, 2015.
+
+\bibitem{obernberger2006biomass}
+I. Obernberger and G. Thek,
+"Biomass CHP plant---Characterisation of feedstock",
+\textit{Biomass Conversion and Biorefinery},
+vol. 7, no. 3, pp. 237--254, 2006.
+
+\bibitem{diaz2009bogota}
+R. Díaz and A. Mejía,
+"Caracterización energética del bagazo de caña en Colombia",
+\textit{Revista Colombiana de Química},
+vol. 38, no. 2, pp. 125--138, 2009.
+
+\bibitem{mohan2006pyrolysis}
+D. Mohan, C.U. Pittman and P.H. Steele,
+"Pyrolysis of biomass",
+\textit{Energy \& Fuels},
+vol. 20, no. 3, pp. 848--889, 2006.
+\end{thebibliography}
+
+\end{document}

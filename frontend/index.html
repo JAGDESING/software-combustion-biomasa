@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Cálculo Energético de Biomasa - DML Ingenieros</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Plotly.js para gráficos -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+    <script>
+        // Configuración de Tailwind con colores personalizados
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'dml-green': {
+                            50: 'rgba(34, 197, 94, 0.05)',
+                            100: 'rgba(34, 197, 94, 0.1)',
+                            200: 'rgba(34, 197, 94, 0.15)',
+                            300: 'rgba(34, 197, 94, 0.2)',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d'
+                        },
+                        'dml-yellow': {
+                            50: 'rgba(250, 204, 21, 0.05)',
+                            100: 'rgba(250, 204, 21, 0.1)',
+                            200: 'rgba(250, 204, 21, 0.15)',
+                            500: '#facc15'
+                        },
+                        'dml-blue': {
+                            50: 'rgba(147, 197, 253, 0.05)',
+                            100: 'rgba(147, 197, 253, 0.1)',
+                            200: 'rgba(147, 197, 253, 0.2)',
+                            500: '#93c5fd'
+                        },
+                        'dml-pink': {
+                            50: 'rgba(251, 207, 232, 0.05)',
+                            100: 'rgba(251, 207, 232, 0.1)',
+                            200: 'rgba(251, 207, 232, 0.15)',
+                            500: '#fbcfe8'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-dml-green-50 via-dml-blue-50 to-dml-pink-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-dml-green-600/90 backdrop-blur-sm shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <img src="/static/assets/logo.png" alt="DML Ingenieros" class="h-12 w-auto">
+                    <div>
+                        <h1 class="text-2xl font-bold text-white">Sistema de Cálculo Energético</h1>
+                        <p class="text-dml-green-100 text-sm">Combustión de Biomasa - Análisis Termodinámico</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="exportPDF()" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg transition-all">
+                        <i class="fas fa-file-pdf mr-2"></i>Exportar PDF
+                    </button>
+                    <button onclick="exportExcel()" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg transition-all">
+                        <i class="fas fa-file-excel mr-2"></i>Exportar Excel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Formulario de Entrada -->
+        <section id="inputSection" class="mb-8">
+            <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6">
+                <h2 class="text-2xl font-bold text-dml-green-800 mb-6 flex items-center">
+                    <i class="fas fa-sliders-h mr-3 text-dml-green-600"></i>
+                    Datos de Entrada
+                </h2>
+
+                <!-- Navegación por Tabs -->
+                <div class="border-b border-gray-200 mb-6">
+                    <nav class="-mb-px flex space-x-8">
+                        <button onclick="showTab('project')" class="tab-btn active px-1 py-2 border-b-2 border-dml-green-500 font-medium text-sm text-dml-green-600" data-tab="project">
+                            <i class="fas fa-project-diagram mr-2"></i>Datos del Proyecto
+                        </button>
+                        <button onclick="showTab('ambiental')" class="tab-btn px-1 py-2 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300" data-tab="ambiental">
+                            <i class="fas fa-cloud mr-2"></i>Condiciones Ambientales
+                        </button>
+                        <button onclick="showTab('combustible')" class="tab-btn px-1 py-2 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300" data-tab="combustible">
+                            <i class="fas fa-fire mr-2"></i>Biomasa
+                        </button>
+                        <button onclick="showTab('operacion')" class="tab-btn px-1 py-2 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300" data-tab="operacion">
+                            <i class="fas fa-cogs mr-2"></i>Operación
+                        </button>
+                    </nav>
+                </div>
+
+                <!-- Formulario -->
+                <form id="calculationForm">
+                    <!-- Tab: Datos del Proyecto -->
+                    <div id="project-tab" class="tab-content active">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="form-group">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Código del Proyecto
+                                </label>
+                                <input type="text" id="projectCode" class="form-input" value="BIO-2024-001" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Código del Documento
+                                </label>
+                                <input type="text" id="documentCode" class="form-input" value="DML-TECH-001" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Analista
+                                </label>
+                                <input type="text" id="analyst" class="form-input" placeholder="Nombre del analista" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Condiciones Ambientales -->
+                    <div id="ambiental-tab" class="tab-content hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div class="form-group">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Ciudad
+                                </label>
+                                <select id="city" class="form-input" onchange="updateCityConditions()">
+                                    <option value="Bogotá">Bogotá</option>
+                                    <option value="Medellín">Medellín</option>
+                                    <option value="Cali">Cali</option>
+                                    <option value="Barranquilla">Barranquilla</option>
+                                    <option value="Bucaramanga">Bucaramanga</option>
+                                    <option value="Pereira">Pereira</option>
+                                    <option value="Manizales">Manizales</option>
+                                    <option value="Cúcuta">Cúcuta</option>
+                                    <option value="Ibagué">Ibagué</option>
+                                    <option value="Villavicencio">Villavicencio</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Altura sobre el nivel del mar (m)
+                                </label>
+                                <input type="number" id="altitude" class="form-input" value="2640" min="0" max="5000">
+                            </div>
+                            <div class="form-group">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Humedad Relativa (%)
+                                </label>
+                                <input type="number" id="relativeHumidity" class="form-input" value="75" min="0" max="100">
+                            </div>
+                            <div class="form-group">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Temperatura de Bulbo Seco (°C)
+                                </label>
+                                <input type="number" id="dryBulbTemp" class="form-input" value="15" min="-20" max="50">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Biomasa -->
+                    <div id="combustible-tab" class="tab-content hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div class="form-group">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Tipo de Biomasa
+                                </label>
+                                <select id="biomassType" class="form-input">
+                                    <option value="Bagazo de caña">Bagazo de Caña</option>
+                                    <option value="Madera">Madera</option>
+                                    <option value="Cascarilla de arroz">Cascarilla de Arroz</option>
+                                    <option value="Astillas">Astillas</option>
+                                    <option value="Otro">Otro</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Flujo de Biomasa (ton/hora)
+                                </label>
+                                <input type="number" id="flowRate" class="form-input" value="3000" min="0" step="100">
+                            </div>
+                        </div>
+
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Composición Elemental (Base Seca - %)</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4">
+                            <div class="form-group">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Carbono (C)</label>
+                                <input type="number" id="carbon" class="form-input" value="50.29" min="0" max="100">
+                            </div>
+                            <div class="form-group">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Hidrógeno (H)</label>
+                                <input type="number" id="hydrogen" class="form-input" value="5.82" min="0" max="100">
+                            </div>
+                            <div class="form-group">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Oxígeno (O)</label>
+                                <input type="number" id="oxygen" class="form-input" value="42.94" min="0" max="100">
+                            </div>
+                            <div class="form-group">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Nitrógeno (N)</label>
+                                <input type="number" id="nitrogen" class="form-input" value="0.22" min="0" max="100">
+                            </div>
+                            <div class="form-group">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Azufre (S)</label>
+                                <input type="number" id="sulfur" class="form-input" value="0.08" min="0" max="100">
+                            </div>
+                            <div class="form-group">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Cenizas</label>
+                                <input type="number" id="ash" class="form-input" value="0.66" min="0" max="100">
+                            </div>
+                            <div class="form-group">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Humedad Total (%)</label>
+                                <input type="number" id="moisture" class="form-input" value="35.09" min="0" max="60">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Operación -->
+                    <div id="operacion-tab" class="tab-content hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div class="form-group">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Poder Calorífico Inferior (kJ/kg)
+                                </label>
+                                <input type="number" id="reportedPCI" class="form-input" value="11367" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Eficiencia del Horno (%)
+                                </label>
+                                <input type="number" id="furnaceEfficiency" class="form-input" value="90" min="10" max="100">
+                            </div>
+                            <div class="form-group">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Aire en Exceso (%)
+                                </label>
+                                <input type="number" id="excessAir" class="form-input" value="30" min="0" max="100">
+                            </div>
+                            <div class="form-group">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Diámetro Ducto (pulgadas)
+                                </label>
+                                <input type="number" id="ductDiameter" class="form-input" value="30" min="1" max="120">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Botones de Acción -->
+                <div class="flex justify-center space-x-4 mt-8">
+                    <button onclick="calculate()" class="px-8 py-3 bg-dml-green-600 text-white rounded-lg font-semibold hover:bg-dml-green-700 transform hover:scale-105 transition-all shadow-lg">
+                        <i class="fas fa-calculator mr-2"></i>Calcular
+                    </button>
+                    <button onclick="resetForm()" class="px-8 py-3 bg-gray-500 text-white rounded-lg font-semibold hover:bg-gray-600 transform hover:scale-105 transition-all shadow-lg">
+                        <i class="fas fa-redo mr-2"></i>Resetear
+                    </button>
+                    <button onclick="loadDefaults()" class="px-8 py-3 bg-dml-blue-500 text-white rounded-lg font-semibold hover:bg-dml-blue-600 transform hover:scale-105 transition-all shadow-lg">
+                        <i class="fas fa-save mr-2"></i>Valores por Defecto
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Indicador de Carga -->
+        <div id="loadingIndicator" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div class="bg-white p-8 rounded-xl shadow-xl">
+                <div class="flex items-center space-x-4">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-dml-green-600"></div>
+                    <div>
+                        <p class="text-lg font-semibold text-gray-800">Realizando cálculos...</p>
+                        <p class="text-sm text-gray-600">Por favor espere</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Resultados -->
+        <section id="resultsSection" class="hidden">
+            <!-- Resumen de Resultados -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                <!-- Panel de Resultados Principales -->
+                <div class="bg-gradient-to-br from-dml-green-100/80 to-dml-green-200/80 backdrop-blur-sm rounded-xl shadow-xl p-6">
+                    <h3 class="text-lg font-bold text-dml-green-800 mb-4">
+                        <i class="fas fa-chart-line mr-2"></i>Resultados Principales
+                    </h3>
+                    <div id="mainResults" class="space-y-3">
+                        <!-- Resultados dinámicos -->
+                    </div>
+                </div>
+
+                <!-- Panel de Composición de Gases -->
+                <div class="bg-gradient-to-br from-dml-blue-100/80 to-dml-blue-200/80 backdrop-blur-sm rounded-xl shadow-xl p-6">
+                    <h3 class="text-lg font-bold text-dml-blue-800 mb-4">
+                        <i class="fas fa-flask mr-2"></i>Composición de Gases
+                    </h3>
+                    <div id="gasComposition" class="space-y-3">
+                        <!-- Composición dinámica -->
+                    </div>
+                </div>
+
+                <!-- Panel de Dinámica -->
+                <div class="bg-gradient-to-br from-dml-yellow-100/80 to-dml-yellow-200/80 backdrop-blur-sm rounded-xl shadow-xl p-6">
+                    <h3 class="text-lg font-bold text-yellow-800 mb-4">
+                        <i class="fas fa-wind mr-2"></i>Dinámica de Fluidos
+                    </h3>
+                    <div id="fluidDynamics" class="space-y-3">
+                        <!-- Dinámica dinámica -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráficos -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <!-- Gráfico de Temperaturas -->
+                <div class="bg-white/80 backdrop-blur-sm rounded-xl shadow-xl p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">
+                        <i class="fas fa-temperature-high mr-2 text-red-500"></i>Perfil de Temperaturas
+                    </h3>
+                    <div id="temperatureChart" class="h-80"></div>
+                </div>
+
+                <!-- Gráfico de Flujo -->
+                <div class="bg-white/80 backdrop-blur-sm rounded-xl shadow-xl p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">
+                        <i class="fas fa-tachometer-alt mr-2 text-blue-500"></i>Velocidad y Caída de Presión
+                    </h3>
+                    <div id="flowChart" class="h-80"></div>
+                </div>
+            </div>
+
+            <!-- Análisis de Sensibilidad -->
+            <div class="bg-white/80 backdrop-blur-sm rounded-xl shadow-xl p-6 mb-8">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">
+                    <i class="fas fa-chart-area mr-2 text-purple-500"></i>Análisis de Sensibilidad
+                </h3>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Seleccionar Parámetro:
+                    </label>
+                    <select id="sensitivityParam" onchange="updateSensitivityAnalysis()" class="form-input max-w-xs">
+                        <option value="excess_air">Aire en Exceso (%)</option>
+                        <option value="furnace_efficiency">Eficiencia del Horno (%)</option>
+                        <option value="moisture">Humedad del Combustible (%)</option>
+                        <option value="flow_rate">Flujo de Biomasa (ton/h)</option>
+                    </select>
+                </div>
+                <div id="sensitivityChart" class="h-96"></div>
+            </div>
+
+            <!-- Tabla Detallada de Resultados -->
+            <div class="bg-white/80 backdrop-blur-sm rounded-xl shadow-xl p-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">
+                    <i class="fas fa-table mr-2 text-green-500"></i>Resultados Detallados
+                </h3>
+                <div class="overflow-x-auto">
+                    <table id="detailedResultsTable" class="min-w-full divide-y divide-gray-200">
+                        <!-- Tabla dinámica -->
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-16">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <p class="text-lg font-semibold">DML Ingenieros Consultores</p>
+                    <p class="text-sm text-gray-400">Software para Cálculos Energéticos de Combustión de Biomasa</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#" class="hover:text-dml-green-400 transition-colors">Sobre Nosotros</a>
+                    <a href="#" class="hover:text-dml-green-400 transition-colors">Contacto</a>
+                    <a href="#" class="hover:text-dml-green-400 transition-colors">Documentación</a>
+                </div>
+            </div>
+            <div class="mt-6 pt-6 border-t border-gray-700 text-center text-sm text-gray-400">
+                © 2024 DML Ingenieros Consultores. Todos los derechos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/static/js/app.js"></script>
+    <script src="/static/js/charts.js"></script>
+    <script src="/static/js/sensitivity.js"></script>
+</body>
+</html>

@@ -1,0 +1,427 @@
+/* Estilos personalizados para DML Ingenieros */
+
+/* Variables CSS */
+:root {
+    --verde-translucido: rgba(34, 197, 94, 0.15);
+    --verde-primary: #16a34a;
+    --verde-dark: #15803d;
+    --amarillo-transparente: rgba(250, 204, 21, 0.1);
+    --azul-claro: rgba(147, 197, 253, 0.2);
+    --rosado-transparente: rgba(251, 207, 232, 0.15);
+    --sombra-suave: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --sombra-media: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --sombra-fuerte: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+/* Estilos base */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    line-height: 1.6;
+    color: #1f2937;
+}
+
+/* Clases de animación */
+.fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.slide-in {
+    animation: slideIn 0.5s ease-out;
+}
+
+/* Formularios */
+.form-input {
+    @apply w-full px-4 py-2 border border-gray-300 rounded-lg
+           focus:ring-2 focus:ring-dml-green-500 focus:border-transparent
+           bg-white/70 backdrop-blur-sm transition-all duration-200
+           hover:bg-white/80;
+}
+
+.form-input:invalid {
+    @apply border-red-300 focus:ring-red-500;
+}
+
+.form-group {
+    @apply mb-4;
+}
+
+.form-label {
+    @apply block text-sm font-medium text-gray-700 mb-2;
+}
+
+/* Tabs */
+.tab-btn {
+    @apply py-2 px-1 border-b-2 font-medium text-sm
+           transition-all duration-200 ease-in-out
+           hover:text-gray-700;
+}
+
+.tab-btn:not(.active) {
+    @apply border-transparent text-gray-500;
+}
+
+.tab-btn.active {
+    @apply border-dml-green-500 text-dml-green-600;
+}
+
+.tab-content {
+    @apply hidden;
+}
+
+.tab-content.active {
+    @apply block fade-in;
+}
+
+/* Cards de resultados */
+.result-card {
+    @apply bg-gradient-to-br from-white/50 to-white/30
+           border border-white/20 rounded-xl p-6
+           backdrop-blur-sm shadow-lg
+           hover:shadow-xl transition-all duration-300
+           hover:scale-[1.02];
+}
+
+.result-value {
+    @apply text-3xl font-bold bg-gradient-to-r from-dml-green-600 to-dml-blue-600
+           bg-clip-text text-transparent;
+}
+
+.result-label {
+    @apply text-sm font-medium text-gray-600 uppercase tracking-wide;
+}
+
+/* Indicadores */
+.indicator-good {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium
+           bg-green-100 text-green-800;
+}
+
+.indicator-warning {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium
+           bg-yellow-100 text-yellow-800;
+}
+
+.indicator-danger {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium
+           bg-red-100 text-red-800;
+}
+
+/* Barras de progreso */
+.progress-bar {
+    @apply w-full bg-gray-200 rounded-full h-2;
+}
+
+.progress-fill {
+    @apply h-2 rounded-full transition-all duration-500 ease-out;
+}
+
+.progress-fill-green {
+    @apply bg-gradient-to-r from-dml-green-400 to-dml-green-600;
+}
+
+.progress-fill-yellow {
+    @apply bg-gradient-to-r from-yellow-400 to-yellow-600;
+}
+
+.progress-fill-red {
+    @apply bg-gradient-to-r from-red-400 to-red-600;
+}
+
+/* Botones personalizados */
+.btn-primary {
+    @apply px-6 py-3 bg-dml-green-600 text-white rounded-lg font-semibold
+           hover:bg-dml-green-700 transform hover:scale-105 transition-all
+           shadow-md hover:shadow-lg active:scale-95;
+}
+
+.btn-secondary {
+    @apply px-6 py-3 bg-gray-500 text-white rounded-lg font-semibold
+           hover:bg-gray-600 transform hover:scale-105 transition-all
+           shadow-md hover:shadow-lg active:scale-95;
+}
+
+.btn-outline {
+    @apply px-6 py-3 border-2 border-dml-green-600 text-dml-green-600 rounded-lg
+           font-semibold hover:bg-dml-green-600 hover:text-white
+           transform hover:scale-105 transition-all
+           active:scale-95;
+}
+
+/* Loading shimmer */
+.loading-shimmer {
+    background: linear-gradient(
+        90deg,
+        #f0f0f0 25%,
+        #e0e0e0 50%,
+        #f0f0f0 75%
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite;
+}
+
+/* Tooltips */
+.tooltip {
+    @apply relative inline-block;
+}
+
+.tooltip .tooltip-text {
+    @apply invisible absolute z-10 px-3 py-2 text-sm font-medium text-white
+           bg-gray-900 rounded-lg shadow-sm opacity-0
+           transition-opacity duration-300
+           bottom-full left-1/2 transform -translate-x-1/2 mb-2;
+}
+
+.tooltip:hover .tooltip-text {
+    @apply visible opacity-100;
+}
+
+/* Gráficos contenedor */
+.chart-container {
+    @apply bg-white/50 rounded-xl p-4 backdrop-blur-sm;
+}
+
+/* Tablas personalizadas */
+.custom-table {
+    @apply w-full divide-y divide-gray-200;
+}
+
+.custom-table thead {
+    @apply bg-gray-50;
+}
+
+.custom-table th {
+    @apply px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider;
+}
+
+.custom-table td {
+    @apply px-6 py-4 whitespace-nowrap text-sm text-gray-900;
+}
+
+.custom-table tbody tr:nth-child(even) {
+    @apply bg-gray-50/50;
+}
+
+.custom-table tbody tr:hover {
+    @apply bg-dml-green-50/50;
+}
+
+/* Móvil responsive */
+@media (max-width: 768px) {
+    .form-input {
+        @apply text-base;
+    }
+
+    .result-value {
+        @apply text-2xl;
+    }
+
+    .tab-btn {
+        @apply text-xs px-1;
+    }
+}
+
+/* Animación de número */
+.animate-number {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Efecto hover en cards */
+.hover-lift {
+    @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+}
+
+/* Scrollbar personalizado */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #22c55e, #15803d);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #16a34a, #14532d);
+}
+
+/* Estilos para impresión */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+
+    body {
+        @apply text-black bg-white;
+    }
+
+    .result-card {
+        @apply border border-gray-300 bg-white;
+    }
+}
+
+/* Grid responsive */
+.grid-responsive {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+}
+
+/* Efectos de glassmorphism */
+.glass-effect {
+    @apply bg-white/10 backdrop-blur-md border border-white/20;
+}
+
+.glass-effect-dark {
+    @apply bg-black/10 backdrop-blur-md border border-white/10;
+}
+
+/* Transiciones suaves */
+.smooth-transition {
+    @apply transition-all duration-300 ease-in-out;
+}
+
+/* Colores de texto según valor */
+.text-value-high {
+    @apply text-red-600;
+}
+
+.text-value-medium {
+    @apply text-yellow-600;
+}
+
+.text-value-low {
+    @apply text-green-600;
+}
+
+/* Badges */
+.badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium;
+}
+
+.badge-green {
+    @apply bg-dml-green-100 text-dml-green-800;
+}
+
+.badge-yellow {
+    @apply bg-yellow-100 text-yellow-800;
+}
+
+.badge-red {
+    @apply bg-red-100 text-red-800;
+}
+
+.badge-blue {
+    @apply bg-dml-blue-100 text-dml-blue-800;
+}
+
+/* Dividers */
+.divider {
+    @apply border-t border-gray-200 my-6;
+}
+
+.divider-thick {
+    @apply border-t-2 border-gray-300 my-8;
+}
+
+/* Alertas */
+.alert {
+    @apply p-4 rounded-lg mb-4;
+}
+
+.alert-success {
+    @apply bg-green-50 border-l-4 border-green-400 text-green-700;
+}
+
+.alert-warning {
+    @apply bg-yellow-50 border-l-4 border-yellow-400 text-yellow-700;
+}
+
+.alert-error {
+    @apply bg-red-50 border-l-4 border-red-400 text-red-700;
+}
+
+.alert-info {
+    @apply bg-dml-blue-50 border-l-4 border-dml-blue-400 text-dml-blue-700;
+}
+
+/* Efectos de onFocus */
+.focus-glow:focus {
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+}
+
+/* Estados disabled */
+.disabled {
+    @apply opacity-50 cursor-not-allowed;
+}
+
+/* Loading spinner */
+.spinner {
+    @apply animate-spin rounded-full border-4 border-dml-green-200
+           border-t-dml-green-600;
+}
+
+/* Iconos animados */
+.icon-bounce:hover {
+    animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Gradientes de texto */
+.gradient-text {
+    @apply bg-gradient-to-r from-dml-green-600 via-dml-blue-600 to-dml-pink-600
+           bg-clip-text text-transparent;
+}
