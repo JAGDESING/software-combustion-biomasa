@@ -69,8 +69,8 @@ biomasa-calculator/
 
 ### 1. Clonar el repositorio
 ```bash
-git clone https://github.com/dml-ingenieros/biomasa-calculator.git
-cd biomasa-calculator
+git clone https://github.com/JAGDESING/software-combustion-biomasa.git
+cd software-combustion-biomasa
 ```
 
 ### 2. Configurar backend
@@ -182,8 +182,9 @@ Este proyecto es propiedad de DML Ingenieros Consultores.
 
 ## 📞 Contacto
 
-- **Email**: contacto@dmlingenieros.com
-- **Website**: https://dmlingenieros.com
+- **Ingeniero Especialista**: Jonathan Arboleda Genes
+- **Email**: proyectos2@dmlsas.com
+- **Website**: https://www.dmlsas.com/
 - **Dirección**: Bogotá, Colombia
 
 ## 🙏 Agradecimientos

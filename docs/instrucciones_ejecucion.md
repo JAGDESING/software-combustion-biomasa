@@ -225,8 +225,9 @@ docker run -p 8000:8000 biomasa-calculator
 - **Código fuente**: Ver archivos en directorio `backend/app/`
 
 ### Contacto:
-- **Email**: contacto@dmlingenieros.com
-- **Web**: https://dmlingenieros.com
+- **Ingeniero Especialista**: Jonathan Arboleda Genes
+- **Email**: proyectos2@dmlsas.com
+- **Web**: https://www.dmlsas.com/
 
 ---
 
